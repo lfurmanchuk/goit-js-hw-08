@@ -5,6 +5,7 @@ const email = document.querySelector('[name="email"]');
 const message = document.querySelector('[name="message"]');
 
 const LOCALSTORAGE_KEY = "feedback-form-state";
+let formData = JSON.parse(localStorage.getItem(LOCALSTORAGE_KEY)) || {};
 
 form.addEventListener('submit', onFormSubmit);
 form.addEventListener('input', throttle(onInput, 500));
@@ -19,25 +20,17 @@ function onFormSubmit(e) {
 }
 
 function onInput(e) {
-const {
-    email,
-    message
-} = e.currentTarget.elements;
-
- const formData = {
-    email: email.value,
-    message: message.value,
-    };
-
-    localStorage.setItem('LOCALSTORAGE_KEY', JSON.stringify(formData));
+  formData[e.target.name] = e.target.value;
+    
+  localStorage.setItem(LOCALSTORAGE_KEY, JSON.stringify(formData));
 }
 
-function populateInput(e) {
-    const savedData = JSON.parse(localStorage.getItem('LOCALSTORAGE_KEY'));
+function populateInput() {
+    const savedData = JSON.parse(localStorage.getItem(LOCALSTORAGE_KEY));
 
     if (savedData) {
         console.log(savedData);
-        email.value = savedData.email;
-        message.value = savedData.message;
+        email.value = savedData.email || '';
+        message.value = savedData.message || '';
     }
 }
